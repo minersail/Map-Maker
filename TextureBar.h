@@ -5,7 +5,7 @@
 class TextureBar : public VisibleGameObject
 {
 public:
-	TextureBar(std::string filename);
+	TextureBar(std::string filename, std::string tilesetname, int mapW, int mapH);
 	~TextureBar();
 
 	void Update(float deltaTime, sf::Event ev);
@@ -23,4 +23,7 @@ public:
 	int offset;
 	sf::Vector2i pressLocation; 
 	bool pressed;
+
+	int mapWidth;
+	int mapHeight;
 };

@@ -134,14 +134,9 @@ sf::Rect<float> VisibleGameObject::GetBoundingRect() const
 	return _sprite.getGlobalBounds();
 }
 
-sf::Rect<float> VisibleGameObject::GetSpriteRect() const
+sf::Rect<float> VisibleGameObject::GetTextureRect() const
 {
 	return _sprite.getLocalBounds();
-}
-
-sf::Rect<int> VisibleGameObject::GetTextureRect() const
-{
-	return _sprite.getTextureRect();
 }
 
 sf::Sprite& VisibleGameObject::GetSprite()

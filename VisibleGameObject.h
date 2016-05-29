@@ -7,6 +7,7 @@ public:
 	VisibleGameObject();
 	virtual ~VisibleGameObject();
 
+	/////////Most of this is from tank game and not used in this game/////////
 	virtual void Load(std::string filename);
 	virtual void Load(std::string filename, bool tiled);
 	virtual void Draw(sf::RenderWindow & window);
@@ -22,13 +23,8 @@ public:
 	virtual float GetHeight() const;
 	virtual float GetDistance(VisibleGameObject other);
 
-	// -------THREE DIFFERENT METHODS TO GET DIFFERENT RECTANGLES-------
-	// #1 -- Returns an axis-aligned rectangle that contains the sprite including transformations -- mainly used in simple collision detection 
 	virtual sf::Rect<float> GetBoundingRect() const;
-	// #2 -- Returns the dimensions of the current sprite -- Used for setting origins and other calculations involving offsets
-	virtual sf::Rect<float> GetSpriteRect() const;
-	// #3 -- Returns the rectangle of the entire texture -- mainly used in sprite sheets
-	virtual sf::Rect<int> GetTextureRect() const;
+	virtual sf::Rect<float> GetTextureRect() const;
 
 	virtual bool IsLoaded() const;
 	bool pendingDestruction;

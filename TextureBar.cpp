@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Map.h"
 
-TextureBar::TextureBar(std::string filename)
+TextureBar::TextureBar(std::string filename, std::string tilesetname, int mapW, int mapH)
 	: LeftButton("images/leftbutton.png", 25, 64), RightButton("images/rightbutton.png", 25, 64),
 	ExportButton("images/exportbutton.png", 40, 64)
 {
@@ -13,7 +13,7 @@ TextureBar::TextureBar(std::string filename)
 
 	for (int i = 0; i < 9; i++)
 	{
-		Button* Tile = new Button("images/tileset.png", 64, 64, sf::IntRect(i * 16, 0, 16, 16));
+		Button* Tile = new Button(tilesetname, 64, 64, sf::IntRect(i * 16, 0, 16, 16));
 		Tile->SetPosition((i + 1) * 74, 835);
 		TextureButtons.push_back(Tile);
 	}
@@ -25,6 +25,8 @@ TextureBar::TextureBar(std::string filename)
 	newTextureID = 0;
 	offset = 0;
 	pressed = false;
+	mapWidth = mapW;
+	mapHeight = mapH;
 }
 
 TextureBar::~TextureBar()
@@ -34,15 +36,15 @@ TextureBar::~TextureBar()
 void TextureBar::Update(float deltaTime, sf::Event ev)
 {
 	sf::Vector2i mousePos = sf::Mouse::getPosition(Game::GetWindow());
-	if (ev.type == sf::Event::MouseButtonPressed && mousePos.x <= 800 && mousePos.x >= 0 &&
-		mousePos.y <= 800 && mousePos.y >= 0) // Mouse was initially pressed in 800x800 box
+	if (ev.type == sf::Event::MouseButtonPressed && mousePos.x <= 16 * mapHeight && mousePos.x >= 0 &&
+		mousePos.y <= 16 * mapHeight && mousePos.y >= 0) // Mouse was initially pressed in map box
 	{
 		pressed = true;
 		pressLocation = mousePos;
 	}
-	else if (ev.type == sf::Event::MouseButtonReleased && mousePos.x <= 800 && mousePos.x >= 0 && 
-			 mousePos.y <= 800 && mousePos.y >= 0 && pressed)
-	{   // Mouse was released in 800x800 box
+	else if (ev.type == sf::Event::MouseButtonReleased && mousePos.x <= 16 * mapWidth && mousePos.x >= 0 && 
+			 mousePos.y <= 16 * mapHeight && mousePos.y >= 0 && pressed)
+	{   // Mouse was released in map box
 		int tileX = mousePos.x / 16;
 		int tileY = mousePos.y / 16;
 		Map* map = dynamic_cast<Map*>(Game::GetObjectManager().Get("Map"));
@@ -56,7 +58,7 @@ void TextureBar::Update(float deltaTime, sf::Event ev)
 		{
 			for (int j = topY; j <= bottomY; j++)
 			{
-				map->Reload(i + j * 50, newTextureID);
+				map->Reload(i + j * mapHeight, newTextureID);
 			}
 		}
 		pressed = false;
@@ -75,7 +77,7 @@ void TextureBar::Update(float deltaTime, sf::Event ev)
 	}
 	else if (RightButton.Clicked(ev))
 	{
-		if (offset != 7) // CHANGE IF MORE TILES ARE ADDED
+		if (offset != 35) // CHANGE IF MORE TILES ARE ADDED
 		{
 			offset += 1;
 		}
@@ -123,8 +125,8 @@ void TextureBar::Draw(sf::RenderWindow& rw)
 	{
 		sf::Vector2i mousePos = sf::Mouse::getPosition(rw);
 
-		if (mousePos.x <= 800 && mousePos.x >= 0 &&
-			mousePos.y <= 800 && mousePos.y >= 0)
+		if (mousePos.x <= mapWidth * 16 && mousePos.x >= 0 &&
+			mousePos.y <= mapHeight * 16 && mousePos.y >= 0)
 		{
 			sf::RectangleShape outline(sf::Vector2f(sf::Mouse::getPosition(rw).x - pressLocation.x,
 				sf::Mouse::getPosition(rw).y - pressLocation.y));
@@ -133,6 +135,10 @@ void TextureBar::Draw(sf::RenderWindow& rw)
 			outline.setOutlineThickness(3);
 			outline.setFillColor(sf::Color(255, 255, 255, 0));
 			rw.draw(outline);
+		}
+		else
+		{
+			pressed = false;
 		}
 	}
 }
